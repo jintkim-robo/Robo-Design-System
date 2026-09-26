@@ -7,26 +7,50 @@ const read = (p) => JSON.parse(fs.readFileSync(path.join(ROOT, p), "utf8"));
 const layouts = read("contracts/layouts.json");
 const components = read("contracts/components.json");
 const variants = read("contracts/variants.json");
+const brands = read("contracts/brands.json");
 
-function generate(layouts, components, variants) {
+function generate() {
   const lines = [
     "<!-- GENERATED from contracts/*.json by scripts/build-agents.mjs — do not edit by hand. -->",
     "# Robo Presentation OS — authoring contract for agents",
     "",
-    "Create editable Robo presentations from structured deck JSON. Do not invent new visual grammar when a contract already covers the content shape.",
+    "Create editable Robo presentations from structured deck JSON. Brand identity is part of the content system, not a cosmetic skin.",
     "",
     "## Core rules",
     ...layouts.rules.map((r,i)=>`${i+1}. ${r}`),
     "",
+    "## Brand selection",
+    "| Brand | Essence | Tension | Signature motif |",
+    "|---|---|---|---|",
+    ...brands.brands.map(b=>`| \`${b.id}\` | ${b.essence} | ${b.tension} | \`${b.motif}\` |`),
+    "",
+    "A deck's `meta.brand` must match the selected variant's brand. Do not use one brand's visual grammar as a generic skin for another brand.",
+    "",
     "## Workflow",
     "1. Define audience, decision, evidence, and output.",
-    "2. Write one conclusion-oriented title per slide.",
-    "3. Pick the semantic layout whose question matches the slide.",
-    "4. Fill only the fields supported by that layout.",
-    "5. Choose one variant deliberately for the audience and medium.",
-    "6. Run structural QA before PPTX generation.",
-    "7. Render PPTX to PDF/PNG and run visual grading before delivery.",
+    "2. Choose the correct Robo brand from deck ownership and purpose.",
+    "3. Write one conclusion-oriented title per slide.",
+    "4. Pick the semantic layout whose question matches the slide.",
+    "5. Fill only the fields supported by that layout.",
+    "6. Choose that brand's Core or Expressive variant deliberately.",
+    "7. Run structural QA before PPTX generation.",
+    "8. Render PPTX to PDF/PNG and run visual grading before delivery.",
     "",
+    "## Brand-owned variants",
+    "| Variant | Brand | Mode | Scheme | Best fit |",
+    "|---|---|---|---|---|",
+    ...variants.variants.map(v=>`| \`${v.id}\` | \`${v.brand}\` | ${v.mode} | ${v.scheme} | ${v.fit} |`),
+    "",
+    "## Brand grammar",
+    ...brands.brands.flatMap(b=>[
+      `### ${b.name}`,
+      `**Tagline:** ${b.tagline}`,
+      `**Essence:** ${b.essence}`,
+      `**Use:** ${b.signature.join(", ")}.`,
+      `**Principles:** ${b.principles.join(" ")}`,
+      `**Avoid:** ${b.avoid.join(", ")}.`,
+      ""
+    ]),
     "## Layouts",
     "| Layout | Question | Best for | Required fields |",
     "|---|---|---|---|",
@@ -35,11 +59,6 @@ function generate(layouts, components, variants) {
       return `| \`${l.id}\` | ${l.answers} | ${l.bestFor.join("; ")} | ${req} |`;
     }),
     "",
-    "## Variants",
-    "| Variant | Scheme | Best fit |",
-    "|---|---|---|",
-    ...variants.variants.map(v=>`| \`${v.id}\` | ${v.scheme} | ${v.fit} |`),
-    "",
     "## Components",
     "| Component | Purpose | Constraints |",
     "|---|---|---|",
@@ -47,9 +66,9 @@ function generate(layouts, components, variants) {
     "",
     "## Non-negotiable QA",
     "- A PPTX that opens is not automatically a good deck.",
-    "- Fail on missing required fields or unsupported layout types.",
-    "- Warn on generic titles, duplicate titles, excess density, and repeated layout monotony.",
-    "- Render every gallery deck to PNG in CI.",
+    "- Fail on missing required fields, unsupported layouts, or brand/variant mismatch.",
+    "- Warn on generic titles, duplicate titles, excess density, repeated layout monotony, and deprecated aliases.",
+    "- Render every active layout × variant combination to PNG in CI.",
     "- Fail visual grading on broken dimensions, near-blank renders, missing expected slides, or regression drift beyond the accepted threshold.",
     "- Keep evidence metadata truthful and explicit.",
     "",
@@ -65,7 +84,7 @@ function generate(layouts, components, variants) {
   return lines.join("\n");
 }
 
-const output = generate(layouts, components, variants);
+const output = generate();
 const target = path.join(ROOT, "AGENTS.md");
 if (process.argv.includes("--check")) {
   const current = fs.existsSync(target) ? fs.readFileSync(target, "utf8") : "";

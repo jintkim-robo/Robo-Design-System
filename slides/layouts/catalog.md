@@ -24,10 +24,16 @@ Choose the layout from the question the slide must answer. Do not choose a layou
 - Use direct comparison when the audience must make a choice.
 - Use process only when sequence matters.
 - Use architecture only when relationships matter.
-- Avoid grids of unrelated cards unless the content is genuinely parallel.
-- Prefer 2–4 visual groups. More than 6 groups requires an explicit reason.
-- If no archetype fits, create a new composition. Do not force content into a template.
+- Prefer 2–4 visual groups. More than 6 requires an explicit reason.
+- If no archetype fits, create a new composition rather than forcing content into a template.
 
-## Robo Lab / Tech behavior
+## Brand behavior
 
-Use strong grid alignment, code-like metadata, restrained blue accents, and UI framing. Technical treatment must reinforce structure; it must not become decoration.
+The semantic layout is shared across the family, but its rendering is brand-owned.
+
+- Robo Co-op: paired sync/handoff cues
+- Robo Lab: system grid, traces, technical notation
+- Co-op Lab: offset collective blocks and editorial labels
+- Robo University: learning-path checkpoints and progress notation
+
+The same architecture slide should remain structurally comparable across brands while still feeling unmistakably owned by the selected brand.

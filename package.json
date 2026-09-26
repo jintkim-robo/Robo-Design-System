@@ -1,6 +1,6 @@
 {
   "name": "@robo-coop/design-system",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "description": "Robo Co-op design system plus an AI-ready presentation OS and editable PPTX generator.",
   "license": "SEE LICENSE IN LICENSE",
@@ -26,7 +26,8 @@
     "qa",
     "generator",
     "contracts",
-    "AGENTS.md"
+    "AGENTS.md",
+    "visual-systems"
   ],
   "scripts": {
     "assets": "node scripts/prepare-assets.mjs",

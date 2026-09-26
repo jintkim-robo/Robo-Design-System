@@ -1,42 +1,39 @@
 # Presentation Layer
 
-The presentation layer converts the Robo Design System from a UI/brand system into a repeatable slide-generation system.
+The presentation layer converts the Robo Design System into a repeatable, brand-aware slide-generation system.
 
 ## Workflow
 
-1. Define the audience, decision, and output.
-2. Write a storyline as one conclusion-oriented title per slide.
-3. Choose a semantic layout for each title.
-4. Apply the appropriate Robo brand.
-5. Apply a taste preset.
-6. Render and run QA.
-7. Export only after both machine and visual review pass.
+1. Define audience, decision, evidence, and output.
+2. Choose the correct Robo brand.
+3. Write one conclusion-oriented title per slide.
+4. Choose a semantic layout from the slide's question.
+5. Choose that brand's Core or Expressive variant.
+6. Generate editable PPTX.
+7. Render and run structural + visual QA.
+
+## Brand is not a skin
+
+Robo Co-op, Robo Lab, Co-op Lab, and Robo University have different visual grammar, not only different colors.
+
+See `../contracts/brands.json` and `../visual-systems/`.
 
 ## Storyline rule
 
-Titles are not labels such as "Market" or "Solution".
-
-Prefer:
-- "AI delivery capacity is constrained by orchestration, not model access"
-- "Five-person learning cells reduce the cost of adding new trainees"
-- "Robo Lab connects human operators and AI agents in one delivery system"
-
-The title and the visual evidence must support the same claim.
+Titles should express the conclusion rather than only naming a topic. Reading the slide titles alone should reveal the deck's argument.
 
 ## Layouts
 
 See `layouts/catalog.md`.
 
-Layouts are semantic structures, not fixed templates. A slide may combine or modify them when the story requires it.
+Layouts are semantic structures shared across brands. The brand variant changes notation, motif, panel treatment, and visual emphasis while preserving the information structure.
 
-## Technical visual language
+## Robo Lab technical language
 
 See `components/tech.md`.
 
-Use the Robo Lab / Tech language for product, architecture, AI demo, automation, and technical strategy decks. Do not apply code-like decoration to human-impact storytelling unless it carries actual meaning.
+Robo Lab Core is the normal system/AI mode. Robo Lab Cyber is the more expressive option: a measured cyberpunk treatment with grids, traces, corner brackets, and high-contrast system notation.
 
 ## Taste
 
-Taste is a controlled parameter layer. See `../taste/presets.json`.
-
-A preset changes emphasis, density, surface treatment, and visual grammar while preserving canonical brand tokens.
+Taste axes remain useful for authoring, but the canonical output is a brand-owned variant from `../contracts/variants.json`.

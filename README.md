@@ -1,41 +1,62 @@
 # Robo Design System — Presentation OS
 
-Robo Co-op's design-system source of truth, extended into a machine-readable, testable presentation system for AI-generated and human-authored decks.
+Robo Co-op's design-system source of truth, extended into a machine-readable, testable presentation system.
 
-## Presentation OS v0.2
+## Brand Visual Systems v1
 
-The presentation layer now has five explicit parts:
+The four Robo brands now have distinct presentation identities:
 
-```text
-contracts → authoring → editable PPTX → render → visual grade
-```
+- **Robo Co-op** — Human ⇄ Machine cooperation, synchronization, governance
+- **Robo Lab** — systems, experiments, traces; optional measured cyberpunk
+- **Co-op Lab** — cooperative entrepreneurship, ownership, constructive rebellion
+- **Robo University** — exploration, learning paths, checkpoints, continuous updating
 
-- `contracts/layouts.json` — semantic layout contract and field constraints
-- `contracts/components.json` — reusable presentation primitives
-- `contracts/variants.json` — audience/tone-specific visual directions
-- `AGENTS.md` — generated agent authoring contract
-- `generator/` — JSON → editable PPTX
-- `grade/` — PPTX → PDF → PNG → visual regression
+Each brand has **Core + Expressive** presentation modes.
 
-The source of truth is the machine-readable contract. `AGENTS.md` is generated from it and must not be edited by hand.
+## Active variants
+
+- `robo-coop-core`
+- `robo-coop-dark`
+- `robo-lab-core`
+- `robo-lab-cyber`
+- `coop-lab-core`
+- `coop-lab-hack`
+- `robo-university-core`
+- `robo-university-explore`
+
+Legacy names remain aliases for compatibility, but new decks should use the brand-owned names.
 
 ## Architecture
 
-```text
-Audience / decision / evidence
-        ↓
-Storyline
-        ↓
-Semantic layout contract
-        ↓
-Robo variant
-        ↓
-Editable PowerPoint
-        ↓
-Rendered PNG gallery
-        ↓
-Structural + visual QA
 ```
+brand contract
+    ↓
+storyline
+    ↓
+semantic layout
+    ↓
+brand-owned variant
+    ↓
+editable PowerPoint
+    ↓
+rendered PNG gallery
+    ↓
+structural + visual QA
+```
+
+Machine-readable sources:
+- `contracts/brands.json`
+- `contracts/layouts.json`
+- `contracts/components.json`
+- `contracts/variants.json`
+
+`AGENTS.md` is generated from these contracts.
+
+## Visual regression
+
+8 variants × 7 semantic layouts = **56 rendered regression cases**.
+
+See [Brand Visual Systems](visual-systems/README.md).
 
 ## Commands
 
@@ -47,13 +68,6 @@ npm run slides:build:example
 npm run slides:gallery
 npm run slides:visual
 ```
-
-See:
-- [Agent contract](AGENTS.md)
-- [Generator](generator/README.md)
-- [Visual grade](grade/README.md)
-- [Brand foundations](BRAND_FOUNDATIONS.md)
-- [Upstream model](UPSTREAM.md)
 
 ## License
 

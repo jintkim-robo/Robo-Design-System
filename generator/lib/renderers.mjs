@@ -14,15 +14,55 @@ function addText(slide, text, opts, meta) {
   });
 }
 
+function addBrandMotif(pptx, slide, theme) {
+  if (theme.motif === "system-grid" || theme.motif === "cyber-grid") {
+    const cols = theme.motif === "cyber-grid" ? 16 : 12;
+    const rows = theme.motif === "cyber-grid" ? 10 : 7;
+    const transparency = Math.max(82, Math.round(100 - (theme.gridOpacity || 0.08) * 100));
+    for (let i = 1; i < cols; i++) {
+      const x = 13.333 * i / cols;
+      slide.addShape(pptx.ShapeType.line, { x, y: 0, w: 0, h: 7.5, line: { color: theme.border, width: 0.3, transparency } });
+    }
+    for (let i = 1; i < rows; i++) {
+      const y = 7.5 * i / rows;
+      slide.addShape(pptx.ShapeType.line, { x: 0, y, w: 13.333, h: 0, line: { color: theme.border, width: 0.3, transparency } });
+    }
+    slide.addShape(pptx.ShapeType.line, { x: 11.78, y: 0.34, w: 0.72, h: 0, line: { color: theme.primary, width: 2.4 } });
+    slide.addShape(pptx.ShapeType.line, { x: 12.52, y: 0.34, w: 0.34, h: 0, line: { color: theme.accent2, width: 2.4 } });
+    if (theme.motif === "cyber-grid") {
+      slide.addShape(pptx.ShapeType.line, { x: 0.22, y: 0.25, w: 0.36, h: 0, line: { color: theme.primary, width: 1.2 } });
+      slide.addShape(pptx.ShapeType.line, { x: 0.22, y: 0.25, w: 0, h: 0.36, line: { color: theme.primary, width: 1.2 } });
+      slide.addShape(pptx.ShapeType.line, { x: 12.74, y: 7.02, w: 0.36, h: 0, line: { color: theme.accent2, width: 1.2 } });
+      slide.addShape(pptx.ShapeType.line, { x: 13.10, y: 6.66, w: 0, h: 0.36, line: { color: theme.accent2, width: 1.2 } });
+    }
+  } else if (theme.motif === "dual-sync") {
+    slide.addShape(pptx.ShapeType.line, { x: 11.24, y: 0.36, w: 0.68, h: 0, line: { color: theme.accent, width: 2.8 } });
+    slide.addShape(pptx.ShapeType.line, { x: 12.02, y: 0.36, w: 0.68, h: 0, line: { color: theme.accent2, width: 2.8 } });
+    slide.addShape(pptx.ShapeType.line, { x: 11.96, y: 0.23, w: 0, h: 0.26, line: { color: theme.text, width: 0.8, transparency: 45 } });
+  } else if (theme.motif === "collective-blocks" || theme.motif === "hack-editorial") {
+    slide.addShape(pptx.ShapeType.rect, { x: 11.72, y: 0.18, w: 0.50, h: 0.16, fill: { color: theme.primary, transparency: theme.motif === "hack-editorial" ? 0 : 18 }, line: { color: theme.primary, transparency: 100 } });
+    slide.addShape(pptx.ShapeType.rect, { x: 12.14, y: 0.31, w: 0.50, h: 0.16, fill: { color: theme.accent, transparency: 20 }, line: { color: theme.accent, transparency: 100 } });
+    slide.addShape(pptx.ShapeType.rect, { x: 12.56, y: 0.18, w: 0.30, h: 0.16, fill: { color: theme.accent2, transparency: 25 }, line: { color: theme.accent2, transparency: 100 } });
+  } else if (theme.motif === "learning-path" || theme.motif === "learning-map") {
+    slide.addShape(pptx.ShapeType.line, { x: 10.92, y: 0.36, w: 1.82, h: 0, line: { color: theme.border, width: 1.2 } });
+    [11.02, 11.58, 12.14, 12.70].forEach((x, i) => {
+      slide.addShape(pptx.ShapeType.ellipse, { x, y: 0.29, w: 0.14, h: 0.14, fill: { color: i < 2 ? theme.primary : theme.surface2 }, line: { color: i < 2 ? theme.primary : theme.border, width: 0.7 } });
+    });
+  }
+}
+
 function headerText(spec, index, theme, meta) {
-  const brand = String(meta.brand || "robo-lab").toUpperCase().replaceAll("-", "_");
   const section = String(spec.section || "DECK").toUpperCase();
   const page = String(index + 1).padStart(2, "0");
-  return theme.codeHeader ? `// ${brand} · ${section} · ${page}` : `${brand} / ${section} / ${page}`;
+  if (theme.headerStyle === "lab") return `// ROBO_LAB · ${section} · ${page}`;
+  if (theme.headerStyle === "manifesto") return `CO-OP LAB // ${section} // ${page}`;
+  if (theme.headerStyle === "progress") return `ROBO UNIVERSITY · MODULE ${section} · ${page}`;
+  return `ROBO CO-OP / SUPPORT TOGETHER / ${section} / ${page}`;
 }
 
 function addBase(pptx, slide, spec, index, theme, meta, isCover = false) {
   slide.background = { color: theme.bg };
+  addBrandMotif(pptx, slide, theme);
   if (isCover) return;
 
   addText(slide, headerText(spec, index, theme, meta), {
@@ -56,11 +96,26 @@ function addBase(pptx, slide, spec, index, theme, meta, isCover = false) {
 }
 
 function panel(slide, pptx, theme, x, y, w, h, fill = theme.surface) {
+  if (theme.motif === "collective-blocks" || theme.motif === "hack-editorial") {
+    slide.addShape(pptx.ShapeType.rect, {
+      x: x + 0.06, y: y + 0.07, w, h,
+      fill: { color: theme.accent, transparency: 78 },
+      line: { color: theme.accent, transparency: 100 }
+    });
+  }
   slide.addShape(theme.panelShape === "square" ? pptx.ShapeType.rect : pptx.ShapeType.roundRect, {
     x, y, w, h,
     fill: { color: fill },
     line: { color: theme.border, width: theme.borderWidth || 0.8 }
   });
+  if (theme.motif === "cyber-grid") {
+    slide.addShape(pptx.ShapeType.line, { x: x + 0.08, y: y + 0.10, w: 0.48, h: 0, line: { color: theme.primary, width: 1.6 } });
+  } else if (theme.motif === "dual-sync") {
+    slide.addShape(pptx.ShapeType.line, { x: x + 0.08, y: y + 0.10, w: 0.22, h: 0, line: { color: theme.accent, width: 1.8 } });
+    slide.addShape(pptx.ShapeType.line, { x: x + 0.32, y: y + 0.10, w: 0.22, h: 0, line: { color: theme.accent2, width: 1.8 } });
+  } else if (theme.motif === "learning-path" || theme.motif === "learning-map") {
+    slide.addShape(pptx.ShapeType.ellipse, { x: x + 0.12, y: y + 0.12, w: 0.14, h: 0.14, fill: { color: theme.primary }, line: { color: theme.primary, width: 0.5 } });
+  }
 }
 
 function bulletText(items = []) {
@@ -69,9 +124,11 @@ function bulletText(items = []) {
 
 export function renderCover({ pptx, slide, spec, index, theme, meta }) {
   addBase(pptx, slide, spec, index, theme, meta, true);
-  const label = theme.codeHeader
-    ? `// ${String(meta.brand || "robo-lab").toUpperCase().replaceAll("-", "_")} · PRESENTATION_OS`
-    : `${String(meta.brand || "robo-lab").toUpperCase().replaceAll("-", " ")} / PRESENTATION OS`;
+  const label =
+    theme.brand === "robo-lab" ? (theme.mode === "expressive" ? "// ROBO_LAB · EXPERIMENTAL_SYSTEM" : "// ROBO_LAB · SYSTEMIC_LAB") :
+    theme.brand === "coop-lab" ? (theme.mode === "expressive" ? "CO-OP LAB // LET'S HACK CAPITALISM" : "CO-OP LAB // STARTUP TOGETHER") :
+    theme.brand === "robo-university" ? (theme.mode === "expressive" ? "ROBO UNIVERSITY · UPDATE IN PROGRESS" : "ROBO UNIVERSITY · LEARN TOGETHER") :
+    (theme.mode === "expressive" ? "ROBO CO-OP · HUMAN ⇄ MACHINE OS" : "ROBO CO-OP · SUPPORT TOGETHER");
   addText(slide, label, {
     x: 0.7, y: 0.55, w: 7.4, h: 0.28,
     fontFace: FONT_MONO, fontSize: 10, color: theme.primary, charSpacing: 1.2
@@ -176,12 +233,13 @@ export function renderArchitecture({ pptx, slide, spec, index, theme, meta }) {
 export function renderDemo({ pptx, slide, spec, index, theme, meta }) {
   addBase(pptx, slide, spec, index, theme, meta);
   panel(slide, pptx, theme, 0.6, 1.85, 3.45, 4.6, theme.surface);
-  addText(slide, "FLOW", {x:0.9,y:2.15,w:1,h:0.25,fontFace:FONT_MONO,fontSize:9,color:theme.primary}, meta);
+  const flowLabel = theme.brand === "robo-university" ? "PATH" : theme.brand === "coop-lab" ? "BUILD" : theme.brand === "robo-coop" ? "SYNC" : "FLOW";
+  addText(slide, flowLabel, {x:0.9,y:2.15,w:1,h:0.25,fontFace:FONT_MONO,fontSize:9,color:theme.primary}, meta);
   (spec.steps || []).slice(0,5).forEach((s,i) => {
     addText(slide, `${String(i+1).padStart(2,"0")}  ${s.title || s}`, {x:0.9,y:2.75+i*0.68,w:2.8,h:0.42,fontSize:11.5,color:i===0?theme.text:theme.muted,bold:i===0,fit:"shrink"}, meta);
   });
 
-  const terminalFill = theme.terminal ? "060B18" : theme.surface2;
+  const terminalFill = theme.terminal ? (theme.brand === "robo-lab" ? "060B18" : theme.surface2) : theme.surface2;
   panel(slide, pptx, theme, 4.45, 1.85, 8.25, 4.6, terminalFill);
   addText(slide, spec.screen.title || "SYSTEM OUTPUT", {x:4.8,y:2.12,w:4.8,h:0.3,fontFace:FONT_MONO,fontSize:9,color:theme.primary}, meta);
   (spec.screen.lines || []).slice(0,9).forEach((line,i) => {
