@@ -1,77 +1,59 @@
 # Robo Design System — Presentation OS
 
-Robo Co-op's design-system source of truth, extended for AI-generated presentations.
+Robo Co-op's design-system source of truth, extended into a machine-readable, testable presentation system for AI-generated and human-authored decks.
 
-The repository keeps the existing four-brand foundations and adds a presentation layer so decks can be generated with consistent story logic, visual language, and QA.
+## Presentation OS v0.2
+
+The presentation layer now has five explicit parts:
+
+```text
+contracts → authoring → editable PPTX → render → visual grade
+```
+
+- `contracts/layouts.json` — semantic layout contract and field constraints
+- `contracts/components.json` — reusable presentation primitives
+- `contracts/variants.json` — audience/tone-specific visual directions
+- `AGENTS.md` — generated agent authoring contract
+- `generator/` — JSON → editable PPTX
+- `grade/` — PPTX → PDF → PNG → visual regression
+
+The source of truth is the machine-readable contract. `AGENTS.md` is generated from it and must not be edited by hand.
 
 ## Architecture
 
-```
-Content
-  ↓
+```text
+Audience / decision / evidence
+        ↓
 Storyline
-  ↓
-Layout selection
-  ↓
-Robo brand styling
-  ↓
-Taste preset
-  ↓
-QA
-  ↓
-PPTX / PDF / image export
+        ↓
+Semantic layout contract
+        ↓
+Robo variant
+        ↓
+Editable PowerPoint
+        ↓
+Rendered PNG gallery
+        ↓
+Structural + visual QA
 ```
 
-## Layers
-
-- `tokens/` — canonical Robo brand foundations
-- `src/css/` — framework-free design-system components
-- `assets/logos/` — canonical logo artwork
-- `slides/tokens/` — presentation geometry, type, density, spacing
-- `slides/layouts/` — semantic slide archetypes
-- `slides/components/` — presentation-specific components
-- `taste/` — adjustable visual-direction presets
-- `qa/` — storyline and rendering quality contract
-
-## Default presentation presets
-
-### Robo Core
-Clean, restrained, brand-first. Good for external corporate, partner, and investor communication.
-
-### Robo Lab / Tech
-Dark surface, white type, Robo Lab blue accents, code-like metadata, system diagrams, terminal/UI framing, and a stronger technical grid.
-
-### Board / Consulting
-Higher information density, explicit comparisons, decision-oriented titles, conservative visual language.
-
-### Impact Story
-More human, more whitespace, stronger narrative and evidence pairing.
-
-## Core rule
-
-**The layout serves the story. The story never serves the template.**
-
-Every slide should have one governing message. Reading only the slide titles should reveal the deck's argument.
-
-See:
-- [Brand foundations](BRAND_FOUNDATIONS.md)
-- [Presentation layer](slides/README.md)
-- [Taste presets](taste/presets.json)
-- [QA contract](qa/slide-rules.md)
-- [Upstream model](UPSTREAM.md)
-- [Design influences](INSPIRATION.md)
-
-## Build
-
-The inherited design-system build remains dependency-light:
+## Commands
 
 ```bash
-npm run build
-npm test
-npm run docs
+npm install
+npm run slides:contracts:check
+npm run slides:qa
+npm run slides:build:example
+npm run slides:gallery
+npm run slides:visual
 ```
 
-Generated `dist/` and `docs/` are not treated as source of truth in this experimental repo.
+See:
+- [Agent contract](AGENTS.md)
+- [Generator](generator/README.md)
+- [Visual grade](grade/README.md)
+- [Brand foundations](BRAND_FOUNDATIONS.md)
+- [Upstream model](UPSTREAM.md)
 
 ## License
 

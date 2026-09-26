@@ -1,33 +1,74 @@
-name: Slide Generator CI
+name: Presentation OS CI
 
 on:
   push:
     branches:
-      - feat/slide-generator-v0.1
+      - feat/presentation-os-v0.2
   pull_request:
     paths:
+      - "contracts/**"
       - "generator/**"
+      - "grade/**"
       - "slides/**"
       - "taste/**"
       - "tokens/**"
+      - "scripts/build-agents.mjs"
+      - "AGENTS.md"
       - "package.json"
       - ".github/workflows/slide-generator.yml"
 
 jobs:
-  generate-pptx:
+  presentation-os:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Install dependencies
+
+      - name: Install Node dependencies
         run: npm install
+
+      - name: Install render dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libreoffice-impress poppler-utils imagemagick fonts-roboto fonts-noto-cjk
+
+      - name: Check generated agent contract
+        run: npm run slides:contracts:check
+
       - name: QA example deck
         run: npm run slides:qa
-      - name: Generate editable PPTX
+
+      - name: Build example PPTX
         run: npm run slides:build:example
-      - name: Verify OOXML package
+
+      - name: Render and grade all layout × variant combinations
+        run: npm run slides:visual
+
+      - name: Verify generated OOXML packages
         run: |
-          test -s generator/output/ai-demo-deck.pptx
           unzip -t generator/output/ai-demo-deck.pptx
+          for f in generator/output/gallery/*.pptx; do
+            unzip -t "$f"
+          done
+
+      - name: Print proposed baseline
+        if: always()
+        run: |
+          if [ -f grade/proposed-baseline.json ]; then
+            echo "--- PROPOSED_BASELINE_START ---"
+            cat grade/proposed-baseline.json
+            echo "--- PROPOSED_BASELINE_END ---"
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: robo-presentation-visual-grade
+          path: |
+            grade/report.html
+            grade/report.json
+            grade/proposed-baseline.json
+            grade/rendered/
