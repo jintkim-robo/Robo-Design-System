@@ -1,0 +1,33 @@
+name: Slide Generator CI
+
+on:
+  push:
+    branches:
+      - feat/slide-generator-v0.1
+  pull_request:
+    paths:
+      - "generator/**"
+      - "slides/**"
+      - "taste/**"
+      - "tokens/**"
+      - "package.json"
+      - ".github/workflows/slide-generator.yml"
+
+jobs:
+  generate-pptx:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install dependencies
+        run: npm install
+      - name: QA example deck
+        run: npm run slides:qa
+      - name: Generate editable PPTX
+        run: npm run slides:build:example
+      - name: Verify OOXML package
+        run: |
+          test -s generator/output/ai-demo-deck.pptx
+          unzip -t generator/output/ai-demo-deck.pptx
