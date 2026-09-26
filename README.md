@@ -2,53 +2,76 @@
 
 Robo Co-op's design-system source of truth, extended for AI-generated presentations.
 
-This repository starts from the Robo Co-op design tokens, typography, brand palettes, logo system, accessibility rules, and framework-free CSS layer, then adds a presentation-specific layer for repeatable slide generation.
+The repository keeps the existing four-brand foundations and adds a presentation layer so decks can be generated with consistent story logic, visual language, and QA.
 
-## Direction
-
-```
-Story → Layout → Robo styling → QA → Export
-```
-
-- **Brand foundations** — existing Robo Co-op / Robo Lab / Co-op Lab / Robo University tokens
-- **Slide tokens** — 16:9 canvas, safe areas, grid, typography, spacing and density
-- **Layout catalog** — repeatable structures such as statement, comparison, process, matrix, architecture and dashboard
-- **Taste controls** — adjustable visual axes instead of one fixed template
-- **QA rules** — storyline, hierarchy, legibility, density and consistency checks
-
-## Visual direction
-
-The base brand system remains unchanged. The experimental **Robo Lab / Tech** preset adds a darker technical language: black surfaces, white typography, Robo Lab blue accents, code-like headers, terminal/UI framing and stronger grid structure.
-
-The goal is not “AI makes a pretty slide.” It is a controlled system in which content structure, visual language and validation are independently testable.
-
-## Repository structure
+## Architecture
 
 ```
-tokens/                 core + brand design tokens
-src/css/                framework-free UI styles
-assets/logos/           canonical logo artwork
-scripts/                build and validation utilities
-
-slides/
-  tokens/               presentation-specific design tokens
-  layouts/              layout vocabulary and selection rules
-  components/           presentation components
-
-taste/
-  presets.json          visual-axis presets
-
-qa/
-  slide-rules.md        presentation QA contract
+Content
+  ↓
+Storyline
+  ↓
+Layout selection
+  ↓
+Robo brand styling
+  ↓
+Taste preset
+  ↓
+QA
+  ↓
+PPTX / PDF / image export
 ```
 
-Generated output such as `dist/` and `docs/` is not treated as source of truth.
+## Layers
 
-## Upstream
+- `tokens/` — canonical Robo brand foundations
+- `src/css/` — framework-free design-system components
+- `assets/logos/` — canonical logo artwork
+- `slides/tokens/` — presentation geometry, type, density, spacing
+- `slides/layouts/` — semantic slide archetypes
+- `slides/components/` — presentation-specific components
+- `taste/` — adjustable visual-direction presets
+- `qa/` — storyline and rendering quality contract
 
-Foundation source: `Robo-Co-op/Robo-Design-System`
+## Default presentation presets
 
-This repository is the experimental evolution path for presentation and AI-generation work.
+### Robo Core
+Clean, restrained, brand-first. Good for external corporate, partner, and investor communication.
+
+### Robo Lab / Tech
+Dark surface, white type, Robo Lab blue accents, code-like metadata, system diagrams, terminal/UI framing, and a stronger technical grid.
+
+### Board / Consulting
+Higher information density, explicit comparisons, decision-oriented titles, conservative visual language.
+
+### Impact Story
+More human, more whitespace, stronger narrative and evidence pairing.
+
+## Core rule
+
+**The layout serves the story. The story never serves the template.**
+
+Every slide should have one governing message. Reading only the slide titles should reveal the deck's argument.
+
+See:
+- [Brand foundations](BRAND_FOUNDATIONS.md)
+- [Presentation layer](slides/README.md)
+- [Taste presets](taste/presets.json)
+- [QA contract](qa/slide-rules.md)
+- [Upstream model](UPSTREAM.md)
+- [Design influences](INSPIRATION.md)
+
+## Build
+
+The inherited design-system build remains dependency-light:
+
+```bash
+npm run build
+npm test
+npm run docs
+```
+
+Generated `dist/` and `docs/` are not treated as source of truth in this experimental repo.
 
 ## License
 

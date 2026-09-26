@@ -1,0 +1,44 @@
+{
+  "$meta": {
+    "name": "Robo Presentation Taste Controls",
+    "version": "0.1.0"
+  },
+  "axes": {
+    "corporateToExperimental": {"min": 0, "max": 100, "default": 35},
+    "humanToTech": {"min": 0, "max": 100, "default": 55},
+    "minimalToDense": {"min": 0, "max": 100, "default": 40},
+    "lightToDark": {"min": 0, "max": 100, "default": 45},
+    "consultingToProduct": {"min": 0, "max": 100, "default": 50}
+  },
+  "presets": {
+    "robo-core": {
+      "corporateToExperimental": 30,
+      "humanToTech": 45,
+      "minimalToDense": 35,
+      "lightToDark": 25,
+      "consultingToProduct": 45
+    },
+    "robo-lab-tech": {
+      "corporateToExperimental": 65,
+      "humanToTech": 85,
+      "minimalToDense": 45,
+      "lightToDark": 95,
+      "consultingToProduct": 75,
+      "notes": "Black surfaces, white type, Robo Lab blue accents, code header, UI framing, strong grid."
+    },
+    "board-consulting": {
+      "corporateToExperimental": 15,
+      "humanToTech": 35,
+      "minimalToDense": 55,
+      "lightToDark": 20,
+      "consultingToProduct": 15
+    },
+    "impact-story": {
+      "corporateToExperimental": 40,
+      "humanToTech": 20,
+      "minimalToDense": 30,
+      "lightToDark": 35,
+      "consultingToProduct": 35
+    }
+  }
+}
