@@ -13,7 +13,8 @@ const threshold = 0.04;
 
 const layouts = JSON.parse(fs.readFileSync(path.join(ROOT, "contracts/layouts.json"), "utf8"));
 const variants = JSON.parse(fs.readFileSync(path.join(ROOT, "contracts/variants.json"), "utf8"));
-const expectedCount = layouts.layouts.length * variants.variants.length;
+const activeVariants = variants.variants.filter(v => !v.deprecated);
+const expectedCount = layouts.layouts.length * activeVariants.length;
 
 function walk(dir) {
   if (!fs.existsSync(dir)) return [];
@@ -82,7 +83,11 @@ if (pngs.length !== expectedCount) {
 
 const hasBaseline = fs.existsSync(baselinePath);
 let baseline = null;
-if (hasBaseline) baseline = JSON.parse(fs.readFileSync(baselinePath, "utf8"));
+if (hasBaseline) {
+  const candidate = JSON.parse(fs.readFileSync(baselinePath, "utf8"));
+  if (candidate.expectedCount === expectedCount) baseline = candidate;
+  else console.warn(`WARN accepted baseline covers ${candidate.expectedCount} renders; current system expects ${expectedCount}. A new proposed baseline will be generated.`);
+}
 
 if (baseline?.renders) {
   const expectedKeys = new Set(Object.keys(baseline.renders));
@@ -130,7 +135,7 @@ const report = {
   expectedCount,
   actualCount:pngs.length,
   threshold:baseline?.threshold ?? threshold,
-  baseline:hasBaseline ? path.relative(ROOT, baselinePath) : null,
+  baseline:baseline ? path.relative(ROOT, baselinePath) : null,
   failures,
   slides:records.map(r=>({key:r.key,width:r.width,height:r.height,colors:r.colors,regression:r.regression,issues:r.issues}))
 };
@@ -148,5 +153,5 @@ const html = `<!doctype html><meta charset="utf-8"><title>Robo Presentation Visu
 <h1>Robo Presentation Visual Grade</h1><p>${records.length} renders · ${failures} failures</p><main class="grid">${cards}</main>`;
 fs.writeFileSync(path.join(ROOT,"grade/report.html"), html);
 
-if (!hasBaseline) console.warn("WARN no accepted visual baseline yet; proposed baseline written to grade/proposed-baseline.json");
+if (!baseline) console.warn("WARN no compatible accepted visual baseline yet; proposed baseline written to grade/proposed-baseline.json");
 process.exit(failures ? 1 : 0);
