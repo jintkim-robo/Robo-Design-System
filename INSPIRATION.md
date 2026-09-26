@@ -1,30 +1,28 @@
 # Design influences
 
-The presentation layer is inspired by several proven slide-system ideas while retaining Robo-specific brand and visual direction.
+The Robo Presentation OS adopts proven presentation-engineering practices while keeping its visual identity original to the four Robo brands.
 
-## Consulting presentation systems
+## Presentation systems
 
-We reviewed `carnot-tech/consulting-pptx-skill` as a reference for workflow design.
+We reviewed `carnot-tech/consulting-pptx-skill` as a reference for editorial workflow.
 
-Ideas adopted at the principle level:
-- titles should carry the storyline
-- one slide should have one governing message
+Principles adopted:
+- titles carry the storyline
+- one slide has one governing message
 - archetypes are an idea catalog, not a constraint
-- content structure comes before visual styling
+- structure precedes styling
 - mechanical QA and visual QA are both necessary
-- fresh-eye review should happen before delivery
+- fresh-eye review happens before delivery
 
-The Robo implementation does not adopt that project's warm visual theme. Robo Lab / Tech uses the Robo palette and its own technical visual grammar.
+We also reviewed machine-readable theme systems such as Tahta for the idea that layout, variant, and agent contracts should be source-controlled and testable.
 
 ## Robo-specific direction
 
-The technical preset is intentionally closer to product/system communication:
-- black surfaces
-- white text
-- Robo Lab electric blue
-- code-like metadata
-- terminal and UI framing
-- system architecture diagrams
-- explicit evidence strips
+The resulting visual system is not copied from a reference deck or external brand.
 
-These elements should communicate actual technical structure, not simulate “tech” aesthetics without meaning.
+- Robo Co-op: synchronization and Human ⇄ Machine cooperation
+- Robo Lab: systems, experiments, traces, and measured cyberpunk
+- Co-op Lab: collective ownership, venture energy, constructive rebellion
+- Robo University: learning paths, checkpoints, exploration, continuous updating
+
+External references inform engineering discipline; the visual grammar belongs to Robo.
