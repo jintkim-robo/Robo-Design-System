@@ -1,8 +1,8 @@
 {
   "name": "@robo-coop/design-system",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
-  "description": "Design tokens, logo assets and a framework-free CSS layer for Robo Co-op, Robo Lab, Co-op Lab and Robo University.",
+  "description": "Robo Co-op design system plus an AI-ready presentation OS and editable PPTX generator.",
   "license": "SEE LICENSE IN LICENSE",
   "type": "module",
   "sideEffects": [
@@ -20,7 +20,11 @@
     "dist",
     "assets",
     "tokens",
-    "src"
+    "src",
+    "slides",
+    "taste",
+    "qa",
+    "generator"
   ],
   "scripts": {
     "assets": "node scripts/prepare-assets.mjs",
@@ -28,9 +32,14 @@
     "bundle": "node scripts/bundle-css.mjs",
     "build": "npm run tokens && npm run bundle",
     "check:contrast": "node scripts/check-contrast.mjs",
-    "test": "npm run build && npm run check:contrast",
+    "test": "npm run build && npm run check:contrast && npm run slides:qa",
     "docs": "node scripts/build-docs.mjs",
-    "start": "npm run build && npm run docs && node scripts/serve.mjs"
+    "start": "npm run build && npm run docs && node scripts/serve.mjs",
+    "slides:qa": "node generator/qa-deck.mjs generator/examples/ai-demo-deck.json",
+    "slides:build:example": "node generator/render-deck.mjs generator/examples/ai-demo-deck.json generator/output/ai-demo-deck.pptx"
+  },
+  "dependencies": {
+    "pptxgenjs": "4.0.1"
   },
   "engines": {
     "node": ">=18"
