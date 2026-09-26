@@ -14,24 +14,32 @@ function addText(slide, text, opts, meta) {
   });
 }
 
+function headerText(spec, index, theme, meta) {
+  const brand = String(meta.brand || "robo-lab").toUpperCase().replaceAll("-", "_");
+  const section = String(spec.section || "DECK").toUpperCase();
+  const page = String(index + 1).padStart(2, "0");
+  return theme.codeHeader ? `// ${brand} · ${section} · ${page}` : `${brand} / ${section} / ${page}`;
+}
+
 function addBase(pptx, slide, spec, index, theme, meta, isCover = false) {
   slide.background = { color: theme.bg };
   if (isCover) return;
 
-  addText(slide, `// ROBO_LAB · ${String(spec.section || "DECK").toUpperCase()} · ${String(index + 1).padStart(2, "0")}`, {
+  addText(slide, headerText(spec, index, theme, meta), {
     x: 0.56, y: 0.28, w: 6.8, h: 0.22,
-    fontFace: FONT_MONO, fontSize: 9.5, color: theme.muted, charSpacing: 1.3
+    fontFace: FONT_MONO, fontSize: 9.2, color: theme.muted, charSpacing: theme.codeHeader ? 1.3 : 0.8
   }, meta);
 
+  const baseTitle = spec.title.length > 60 ? 25 : 29;
   addText(slide, spec.title, {
     x: 0.56, y: 0.72, w: 12.1, h: 0.72,
-    fontSize: spec.title.length > 60 ? 25 : 29,
+    fontSize: Math.round(baseTitle * (theme.titleScale || 1)),
     bold: true, color: theme.text, fit: "shrink"
   }, meta);
 
   slide.addShape(pptx.ShapeType.line, {
     x: 0.56, y: 6.96, w: 12.18, h: 0,
-    line: { color: theme.border, width: 0.7 }
+    line: { color: theme.border, width: theme.ruleWidth || 0.7 }
   });
 
   if (spec.source) {
@@ -48,12 +56,10 @@ function addBase(pptx, slide, spec, index, theme, meta, isCover = false) {
 }
 
 function panel(slide, pptx, theme, x, y, w, h, fill = theme.surface) {
-  slide.addShape(pptx.ShapeType.roundRect, {
+  slide.addShape(theme.panelShape === "square" ? pptx.ShapeType.rect : pptx.ShapeType.roundRect, {
     x, y, w, h,
-    rectRadius: 0.04,
     fill: { color: fill },
-    line: { color: theme.border, width: 0.8 },
-    radius: 0.08
+    line: { color: theme.border, width: theme.borderWidth || 0.8 }
   });
 }
 
@@ -63,13 +69,17 @@ function bulletText(items = []) {
 
 export function renderCover({ pptx, slide, spec, index, theme, meta }) {
   addBase(pptx, slide, spec, index, theme, meta, true);
-  addText(slide, `// ${String(meta.brand || "robo-lab").toUpperCase().replaceAll("-", "_")} · PRESENTATION_OS`, {
+  const label = theme.codeHeader
+    ? `// ${String(meta.brand || "robo-lab").toUpperCase().replaceAll("-", "_")} · PRESENTATION_OS`
+    : `${String(meta.brand || "robo-lab").toUpperCase().replaceAll("-", " ")} / PRESENTATION OS`;
+  addText(slide, label, {
     x: 0.7, y: 0.55, w: 7.4, h: 0.28,
-    fontFace: FONT_MONO, fontSize: 10, color: theme.primary, charSpacing: 1.4
+    fontFace: FONT_MONO, fontSize: 10, color: theme.primary, charSpacing: 1.2
   }, meta);
   addText(slide, spec.title, {
     x: 0.7, y: 1.55, w: 10.9, h: 1.55,
-    fontSize: spec.title.length > 48 ? 35 : 44, bold: true, color: theme.text, fit: "shrink"
+    fontSize: Math.round((spec.title.length > 48 ? 35 : 44) * (theme.titleScale || 1)),
+    bold: true, color: theme.text, fit: "shrink"
   }, meta);
   if (spec.subtitle || meta.subtitle) addText(slide, spec.subtitle || meta.subtitle, {
     x: 0.72, y: 3.35, w: 8.8, h: 0.7,
@@ -171,7 +181,8 @@ export function renderDemo({ pptx, slide, spec, index, theme, meta }) {
     addText(slide, `${String(i+1).padStart(2,"0")}  ${s.title || s}`, {x:0.9,y:2.75+i*0.68,w:2.8,h:0.42,fontSize:11.5,color:i===0?theme.text:theme.muted,bold:i===0,fit:"shrink"}, meta);
   });
 
-  panel(slide, pptx, theme, 4.45, 1.85, 8.25, 4.6, "060B18");
+  const terminalFill = theme.terminal ? "060B18" : theme.surface2;
+  panel(slide, pptx, theme, 4.45, 1.85, 8.25, 4.6, terminalFill);
   addText(slide, spec.screen.title || "SYSTEM OUTPUT", {x:4.8,y:2.12,w:4.8,h:0.3,fontFace:FONT_MONO,fontSize:9,color:theme.primary}, meta);
   (spec.screen.lines || []).slice(0,9).forEach((line,i) => {
     addText(slide, String(line), {x:4.82,y:2.7+i*0.37,w:7.4,h:0.28,fontFace:FONT_MONO,fontSize:9.5,color:i===0?theme.text:theme.muted,fit:"shrink"}, meta);

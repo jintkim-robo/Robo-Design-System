@@ -4,6 +4,8 @@ dist/
 *.log
 
 # Generated presentation output
-generator/output/*.pptx
-generator/output/*.pdf
-generator/output/*.png
+generator/output/
+grade/rendered/
+grade/report.json
+grade/report.html
+grade/proposed-baseline.json
