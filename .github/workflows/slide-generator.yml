@@ -3,6 +3,7 @@ name: Presentation OS CI
 on:
   push:
     branches:
+      - main
       - feat/presentation-os-v0.2
   pull_request:
     paths:
@@ -25,7 +26,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Install Node dependencies
         run: npm install
@@ -54,15 +55,6 @@ jobs:
             unzip -t "$f"
           done
 
-      - name: Print proposed baseline
-        if: always()
-        run: |
-          if [ -f grade/proposed-baseline.json ]; then
-            echo "--- PROPOSED_BASELINE_START ---"
-            cat grade/proposed-baseline.json
-            echo "--- PROPOSED_BASELINE_END ---"
-          fi
-
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -70,5 +62,4 @@ jobs:
           path: |
             grade/report.html
             grade/report.json
-            grade/proposed-baseline.json
             grade/rendered/
