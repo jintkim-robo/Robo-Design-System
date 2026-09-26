@@ -1,0 +1,133 @@
+{
+  "$meta": {
+    "name": "Robo Presentation Variant Contract",
+    "version": "0.2.0",
+    "description": "Machine-readable visual directions. Variants change composition and treatment while preserving Robo brand foundations."
+  },
+  "variants": [
+    {
+      "id": "robo-core",
+      "label": "Robo Core",
+      "scheme": "light",
+      "fit": "External corporate, partner, investor, and general-purpose communication.",
+      "tastePreset": "robo-core",
+      "visual": {
+        "bg": "F7FBFE",
+        "surface": "FFFFFF",
+        "surface2": "D0E8FA",
+        "text": "20305B",
+        "muted": "5C7196",
+        "border": "C7D8E9",
+        "primary": "007DD1",
+        "accent": "65B2F5",
+        "danger": "F75326",
+        "success": "1EB2A9",
+        "warning": "FFD166"
+      },
+      "composition": {
+        "titleScale": 1,
+        "panelShape": "round",
+        "borderWidth": 0.8,
+        "ruleWidth": 0.8,
+        "density": "balanced"
+      },
+      "features": {
+        "codeHeader": false,
+        "terminal": true
+      }
+    },
+    {
+      "id": "robo-lab-tech",
+      "label": "Robo Lab / Tech",
+      "scheme": "dark",
+      "fit": "AI demos, product architecture, automation, agent systems, and technical strategy.",
+      "tastePreset": "robo-lab-tech",
+      "visual": {
+        "bg": "05070B",
+        "surface": "0A1226",
+        "surface2": "101C38",
+        "text": "FFFFFF",
+        "muted": "65B2F5",
+        "border": "31527F",
+        "primary": "00C3FF",
+        "accent": "65B2F5",
+        "danger": "F75326",
+        "success": "1EB2A9",
+        "warning": "FFD166"
+      },
+      "composition": {
+        "titleScale": 1,
+        "panelShape": "square",
+        "borderWidth": 0.8,
+        "ruleWidth": 0.8,
+        "density": "balanced"
+      },
+      "features": {
+        "codeHeader": true,
+        "terminal": true
+      }
+    },
+    {
+      "id": "board-consulting",
+      "label": "Board / Consulting",
+      "scheme": "light",
+      "fit": "Board reviews, investor materials, decision memos, strategy, and dense comparisons.",
+      "tastePreset": "board-consulting",
+      "visual": {
+        "bg": "F8F9FB",
+        "surface": "FFFFFF",
+        "surface2": "EFF3F8",
+        "text": "183169",
+        "muted": "62708A",
+        "border": "D8DEE8",
+        "primary": "20305B",
+        "accent": "007DD1",
+        "danger": "F75326",
+        "success": "1EB2A9",
+        "warning": "D69E2E"
+      },
+      "composition": {
+        "titleScale": 0.94,
+        "panelShape": "square",
+        "borderWidth": 0.65,
+        "ruleWidth": 0.65,
+        "density": "dense"
+      },
+      "features": {
+        "codeHeader": false,
+        "terminal": false
+      }
+    },
+    {
+      "id": "impact-story",
+      "label": "Impact Story",
+      "scheme": "light",
+      "fit": "Human-impact storytelling, social innovation, field narratives, and partner engagement.",
+      "tastePreset": "impact-story",
+      "visual": {
+        "bg": "F7F5F0",
+        "surface": "FFFFFF",
+        "surface2": "EEF5F8",
+        "text": "20305B",
+        "muted": "657084",
+        "border": "DDE3E8",
+        "primary": "007DD1",
+        "accent": "1EB2A9",
+        "danger": "F75326",
+        "success": "1EB2A9",
+        "warning": "FFD166"
+      },
+      "composition": {
+        "titleScale": 1.05,
+        "panelShape": "round",
+        "borderWidth": 0.7,
+        "ruleWidth": 0.7,
+        "density": "airy"
+      },
+      "features": {
+        "codeHeader": false,
+        "terminal": false
+      }
+    }
+  ]
+}

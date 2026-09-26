@@ -1,30 +1,64 @@
-const ALLOWED = new Set(["cover","statement","metrics","comparison","process","architecture","demo"]);
+import fs from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
+const HERE = path.dirname(fileURLToPath(import.meta.url));
+const ROOT = path.resolve(HERE, "../..");
+const layoutsContract = JSON.parse(fs.readFileSync(path.join(ROOT, "contracts/layouts.json"), "utf8"));
+const variantsContract = JSON.parse(fs.readFileSync(path.join(ROOT, "contracts/variants.json"), "utf8"));
+const LAYOUTS = new Map(layoutsContract.layouts.map(l => [l.id, l]));
+const VARIANTS = new Set(variantsContract.variants.map(v => v.id));
 const GENERIC_TITLES = new Set(["overview","agenda","market","solution","problem","results","next steps","summary","introduction"]);
 
 function words(value = "") {
   return String(value).trim().split(/\s+/).filter(Boolean).length;
 }
 
-function populatedArray(v) {
-  return Array.isArray(v) && v.length > 0;
+function validateField(value, rule, where, errors, warnings) {
+  if (rule.required && (value === undefined || value === null || value === "")) {
+    errors.push(`${where}: required.`);
+    return;
+  }
+  if (value === undefined || value === null) return;
+  if (rule.type === "array" && !Array.isArray(value)) errors.push(`${where}: must be an array.`);
+  if (rule.type === "object" && (typeof value !== "object" || Array.isArray(value))) errors.push(`${where}: must be an object.`);
+  if (rule.type === "string" && typeof value !== "string") errors.push(`${where}: must be a string.`);
+  if (Array.isArray(value)) {
+    if (rule.minItems && value.length < rule.minItems) errors.push(`${where}: needs at least ${rule.minItems} item(s).`);
+    if (rule.maxItems && value.length > rule.maxItems) errors.push(`${where}: allows at most ${rule.maxItems} item(s).`);
+  }
+  if (typeof value === "string") {
+    if (rule.maxChars && value.length > rule.maxChars) warnings.push(`${where}: ${value.length} chars exceeds guidance of ${rule.maxChars}.`);
+    if (rule.maxWords && words(value) > rule.maxWords) warnings.push(`${where}: ${words(value)} words exceeds guidance of ${rule.maxWords}.`);
+  }
 }
 
 export function validateDeck(deck) {
   const errors = [];
   const warnings = [];
-
   if (!deck || typeof deck !== "object") errors.push("Deck must be an object.");
   if (!deck?.meta?.title) errors.push("meta.title is required.");
   if (!Array.isArray(deck?.slides) || deck.slides.length === 0) errors.push("slides must contain at least one slide.");
   if (errors.length) return { errors, warnings };
 
+  const preset = deck.meta.preset || "robo-lab-tech";
+  if (!VARIANTS.has(preset)) errors.push(`meta.preset "${preset}" is not defined in contracts/variants.json.`);
+
   const titles = new Map();
+  let repeatedType = null;
+  let repeatedCount = 0;
 
   deck.slides.forEach((slide, i) => {
     const n = i + 1;
-    if (!ALLOWED.has(slide.type)) errors.push(`Slide ${n}: unsupported type "${slide.type}".`);
-    if (!slide.title) errors.push(`Slide ${n}: title is required.`);
-    if (slide.title && slide.title.length > 95) warnings.push(`Slide ${n}: title is long (${slide.title.length} chars).`);
+    const contract = LAYOUTS.get(slide.type);
+    if (!contract) {
+      errors.push(`Slide ${n}: unsupported type "${slide.type}".`);
+      return;
+    }
+
+    for (const [field, rule] of Object.entries(contract.fields)) {
+      validateField(slide[field], rule, `Slide ${n} ${field}`, errors, warnings);
+    }
 
     const key = String(slide.title || "").trim().toLowerCase();
     if (key) {
@@ -35,15 +69,11 @@ export function validateDeck(deck) {
 
     const bodyWords = words([slide.body, slide.proof, slide.subtitle].filter(Boolean).join(" "));
     if (bodyWords > 90) warnings.push(`Slide ${n}: body copy is dense (${bodyWords} words; default max 90).`);
+    if (/\b(TODO|TBD|LOREM)\b/i.test(JSON.stringify(slide))) warnings.push(`Slide ${n}: contains placeholder text.`);
 
-    if (slide.type === "metrics" && !populatedArray(slide.metrics)) errors.push(`Slide ${n}: metrics layout requires metrics[].`);
-    if (slide.type === "comparison" && !populatedArray(slide.columns)) errors.push(`Slide ${n}: comparison layout requires columns[].`);
-    if (slide.type === "process" && !populatedArray(slide.steps)) errors.push(`Slide ${n}: process layout requires steps[].`);
-    if (slide.type === "architecture" && !populatedArray(slide.layers)) errors.push(`Slide ${n}: architecture layout requires layers[].`);
-    if (slide.type === "demo" && !slide.screen) errors.push(`Slide ${n}: demo layout requires screen{}.`);
-
-    const raw = JSON.stringify(slide);
-    if (/\b(TODO|TBD|LOREM)\b/i.test(raw)) warnings.push(`Slide ${n}: contains placeholder text.`);
+    if (slide.type === repeatedType) repeatedCount += 1;
+    else { repeatedType = slide.type; repeatedCount = 1; }
+    if (repeatedCount === 3) warnings.push(`Slide ${n}: layout "${slide.type}" appears three times in a row; check composition variety.`);
   });
 
   if (deck.slides[0]?.type !== "cover") warnings.push("First slide is not a cover.");
