@@ -1,71 +1,58 @@
-# Robo Slide Generator v0.1
+# Robo Slide Generator v0.3
 
-Generate editable PowerPoint decks from structured JSON using the Robo Design System.
+Generate editable PowerPoint decks from structured JSON using the Robo Presentation OS.
 
 ## Pipeline
 
 ```
 deck.json
   ↓
-QA
+brand + variant contract
   ↓
-Robo tokens + taste preset
+story / field QA
   ↓
 semantic layout renderer
   ↓
 editable .pptx
+  ↓
+PDF / PNG render
+  ↓
+visual regression
 ```
 
-## Install
+## Brand variants
 
-```bash
-npm install
-```
+Every new deck must choose a matching `meta.brand` and brand-owned `meta.preset`.
 
-The generator uses `pptxgenjs@4.0.1`.
+- Robo Co-op: `robo-coop-core`, `robo-coop-dark`
+- Robo Lab: `robo-lab-core`, `robo-lab-cyber`
+- Co-op Lab: `coop-lab-core`, `coop-lab-hack`
+- Robo University: `robo-university-core`, `robo-university-explore`
+
+Legacy variant names remain aliases for compatibility only.
 
 ## Run the included example
 
 ```bash
+npm install
 npm run slides:qa
 npm run slides:build:example
 ```
 
-Output:
-
-`generator/output/ai-demo-deck.pptx`
-
-## Generate another deck
-
-```bash
-node generator/render-deck.mjs my-deck.json output/my-deck.pptx
-```
+Output: `generator/output/ai-demo-deck.pptx`
 
 ## Supported slide types
 
-- `cover`
-- `statement`
-- `metrics`
-- `comparison`
-- `process`
-- `architecture`
-- `demo`
+`cover`, `statement`, `metrics`, `comparison`, `process`, `architecture`, `demo`.
 
-See `schema/deck.schema.json` for the machine-readable contract.
+## Quality gates
 
-## Design behavior
+```bash
+npm run slides:contracts:check
+npm run slides:qa
+npm run slides:visual
+```
 
-The renderer uses:
-- canonical brand tokens from `tokens/brands/`
-- presentation geometry from `slides/tokens/`
-- taste selection from `taste/presets.json`
-- storyline and density checks from the generator QA layer
+The visual test renders every active layout × brand variant combination and compares it with the accepted fingerprint baseline.
 
-The `robo-lab-tech` preset uses dark surfaces, white typography, Robo Lab Electric Cyan, code-like metadata, strong grids, and UI framing.
-
-## v0.1 constraints
-
-- Layout is intentionally deterministic rather than free-form.
-- Charts and image placement are not implemented yet.
-- Automatic render-to-PNG/PDF visual QA is the next layer.
-- The generated PPTX is editable: text, cards, rules, and diagrams are native PowerPoint objects.
+The generated PPTX remains editable: text, cards, rules, diagrams, and brand motifs are native PowerPoint objects.
