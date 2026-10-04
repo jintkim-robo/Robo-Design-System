@@ -12,6 +12,100 @@ Create editable Robo presentations from structured deck JSON. Brand identity is 
 6. Facts, assumptions, estimates, and recommendations must be distinguishable.
 7. Never invent sources, screenshots, numbers, quotes, customer names, or system outputs.
 
+## Story-first workflow
+1. **Frame the decision** — Define the audience, decision or action, evidence boundary, and required output before slide design.
+2. **Write the governing claim** — State the deck conclusion first, then write one conclusion-oriented headline per slide before drawing.
+3. **Build the headline ledger** — For multi-slide decks, verify that headlines form a coherent argument and that peer slides use one consistent split.
+4. **Choose intent and archetype** — Select the slide's communication intent first, then select a numbered archetype, then map it to the closest supported semantic layout.
+5. **Apply semantic layout and brand grammar** — Use the semantic layout as the rendering contract and the selected Robo brand as the visual grammar.
+6. **Measure and verify** — Run structural QA, render the deck, and inspect overflow, collisions, hierarchy, consistency, and evidence traceability.
+
+### Headline rules
+- One slide has one governing message.
+- Prefer a complete claim with an explicit judgment or implication over a topic label.
+- Keep evidence and judgment in the same headline when it remains readable.
+- Use sentence-pattern variety across adjacent slides.
+- Do not use the headline to count elements; use it to state what the elements mean.
+- Move secondary evidence into the body before weakening the claim.
+
+### Storyline rules
+- Headlines read alone should reconstruct the core argument.
+- Adjacent slides should have an explicit logical bridge such as cause, consequence, contrast, or evidence.
+- Sibling slides should share one segmentation logic and comparable granularity.
+- Decision decks should identify the questions that require an explicit choice.
+- The final decision slide should resolve decisions, owners or timing rather than merely summarize.
+
+### Evidence rules
+- Every material number needs a source, a stated calculation basis, or an explicit placeholder.
+- Facts, assumptions, estimates, recommendations, and decisions must remain distinguishable.
+- Each major clause in a headline should be supported by a visible body element.
+- Do not fabricate screenshots, quotes, system output, customer names, or measured results.
+
+## Slide intents
+| Intent | Question | Default semantic layouts |
+|---|---|---|
+| `decide` | What should the audience decide, prioritize, or carry forward? | `cover`, `statement`, `metrics`, `comparison` |
+| `decompose` | What creates the total, loss, value, or outcome? | `metrics`, `process`, `architecture` |
+| `compare` | How do alternatives differ on a common basis? | `comparison`, `architecture` |
+| `change` | What changes while the frame of reference stays stable? | `comparison`, `metrics` |
+| `relationship` | Where do entities sit and how are variables or groups related? | `metrics`, `comparison`, `architecture` |
+| `time` | How does work, governance, or value move over time? | `process`, `demo`, `architecture` |
+| `map` | How is a system, organization, ecosystem, or value chain structured? | `architecture`, `comparison` |
+
+## Archetype registry
+Archetypes guide reasoning and composition. They do not replace the renderer contract: `slide.type` remains one of the supported semantic layouts.
+
+| ID | Intent | Archetype | Renderer hints |
+|---|---|---|---|
+| `01` | `decide` | Section / navigation | `cover`, `statement` |
+| `02` | `decide` | Executive decision summary | `statement`, `comparison` |
+| `03` | `decide` | Decision close | `statement`, `process` |
+| `04` | `decide` | Repeatable catalog | `comparison` |
+| `05` | `decide` | KPI timeline | `metrics`, `process` |
+| `06` | `decide` | Priority bubble map | `comparison`, `metrics` |
+| `07` | `decompose` | Waterfall bridge | `metrics`, `process` |
+| `08` | `decompose` | Funnel loss | `process`, `metrics` |
+| `09` | `decompose` | Value-chain economics | `process`, `architecture` |
+| `10` | `decompose` | Distribution cascade | `process`, `metrics` |
+| `11` | `decompose` | Logic tree | `architecture` |
+| `12` | `decompose` | Formula driver tree | `architecture`, `metrics` |
+| `13` | `decompose` | Active vs waiting band | `metrics`, `comparison` |
+| `46` | `decompose` | Vertical issue tree | `architecture` |
+| `14` | `compare` | Aligned small multiples | `comparison`, `metrics` |
+| `15` | `compare` | Shared-process comparison | `comparison`, `process` |
+| `16` | `compare` | Common-scale structure | `comparison` |
+| `17` | `compare` | Mirrored flow | `comparison`, `process` |
+| `18` | `compare` | Mirrored organization | `comparison`, `architecture` |
+| `19` | `compare` | Risk footprint map | `comparison`, `metrics` |
+| `45` | `compare` | Evidence-to-implication table | `comparison`, `statement` |
+| `20` | `change` | Anchored before / after | `comparison` |
+| `21` | `change` | Area recomposition | `comparison`, `metrics` |
+| `22` | `change` | Assumption shift table | `comparison`, `statement` |
+| `23` | `relationship` | Area-efficiency map | `metrics`, `comparison` |
+| `24` | `relationship` | Quantitative area grid | `metrics`, `comparison` |
+| `25` | `relationship` | Trajectory scatter | `metrics` |
+| `26` | `relationship` | Cycle scatter | `metrics` |
+| `27` | `relationship` | Reference-line scatter | `metrics` |
+| `28` | `relationship` | Scatter small multiples + table | `metrics`, `comparison` |
+| `29` | `relationship` | Interval scatter | `metrics` |
+| `30` | `relationship` | Overlap / Venn | `architecture`, `comparison` |
+| `31` | `relationship` | Actual-to-forecast stacked area | `metrics` |
+| `32` | `relationship` | Decision 2x2 | `comparison` |
+| `33` | `relationship` | Lifecycle + policy | `process`, `comparison` |
+| `34` | `relationship` | Complementary fit | `comparison`, `architecture` |
+| `35` | `time` | Horizon swimlanes | `process` |
+| `36` | `time` | Modular plan | `process` |
+| `37` | `time` | Phase plan | `process` |
+| `38` | `time` | Dual-level plan | `process`, `architecture` |
+| `39` | `time` | Governance handoffs | `process`, `architecture` |
+| `40` | `time` | Value / cash crossing | `process`, `architecture` |
+| `47` | `time` | Role swimlane flow | `process`, `demo` |
+| `41` | `map` | Layered ecosystem map | `architecture` |
+| `42` | `map` | Value-chain coverage map | `architecture`, `process` |
+| `43` | `map` | Organization classification map | `architecture` |
+| `44` | `map` | Overview + detail zoom | `architecture`, `comparison` |
+| `48` | `map` | Stakeholder network | `architecture` |
+
 ## Brand selection
 | Brand | Essence | Tension | Signature motif |
 |---|---|---|---|
@@ -22,12 +116,12 @@ Create editable Robo presentations from structured deck JSON. Brand identity is 
 
 A deck's `meta.brand` must match the selected variant's brand. Do not use one brand's visual grammar as a generic skin for another brand.
 
-## Workflow
+## Workflow for generation
 1. Define audience, decision, evidence, and output.
 2. Choose the correct Robo brand from deck ownership and purpose.
-3. Write one conclusion-oriented title per slide.
-4. Pick the semantic layout whose question matches the slide.
-5. Fill only the fields supported by that layout.
+3. Write the governing claim and headline ledger before drawing.
+4. For each slide, choose intent → archetype → semantic layout, in that order.
+5. Fill only the fields supported by the selected semantic layout.
 6. Choose that brand's Core or Expressive variant deliberately.
 7. Run structural QA before PPTX generation.
 8. Render PPTX to PDF/PNG and run visual grading before delivery.
@@ -96,7 +190,9 @@ A deck's `meta.brand` must match the selected variant's brand. Do not use one br
 ## Non-negotiable QA
 - A PPTX that opens is not automatically a good deck.
 - Fail on missing required fields, unsupported layouts, or brand/variant mismatch.
+- When intent/archetype metadata is present, validate it against the archetype registry.
 - Warn on generic titles, duplicate titles, excess density, repeated layout monotony, and deprecated aliases.
+- Verify the headline ledger as an argument, not just slide-by-slide correctness.
 - Render every active layout × variant combination to PNG in CI.
 - Fail visual grading on broken dimensions, near-blank renders, missing expected slides, or regression drift beyond the accepted threshold.
 - Keep evidence metadata truthful and explicit.
