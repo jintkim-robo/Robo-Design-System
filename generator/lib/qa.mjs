@@ -5,10 +5,14 @@ const HERE=path.dirname(fileURLToPath(import.meta.url));
 const ROOT=path.resolve(HERE,"../..");
 const lc=JSON.parse(fs.readFileSync(path.join(ROOT,"contracts/layouts.json"),"utf8"));
 const vc=JSON.parse(fs.readFileSync(path.join(ROOT,"contracts/variants.json"),"utf8"));
+const ac=JSON.parse(fs.readFileSync(path.join(ROOT,"contracts/archetypes.json"),"utf8"));
 const LAYOUTS=new Map(lc.layouts.map(l=>[l.id,l]));
 const VARIANTS=new Map(vc.variants.map(v=>[v.id,v]));
+const INTENTS=new Map(ac.intents.map(i=>[i.id,i]));
+const ARCHETYPES=new Map(ac.archetypes.map(a=>[a.id,a]));
 const ALIASES=vc.$meta.aliases||{};
 const GENERIC=new Set(["overview","agenda","market","solution","problem","results","next steps","summary","introduction"]);
+const SELF_REF=/\b(this slide|this page|on this slide|on this page)\b/i;
 const words=(v="")=>String(v).trim().split(/\s+/).filter(Boolean).length;
 function resolveVariant(id){const canonical=ALIASES[id]||id;return {canonical,variant:VARIANTS.get(canonical),deprecated:Boolean(ALIASES[id])};}
 function validateField(value,rule,where,errors,warnings){
@@ -35,8 +39,26 @@ export function validateDeck(deck){
   const n=i+1,contract=LAYOUTS.get(slide.type);
   if(!contract){errors.push(`Slide ${n}: unsupported type "${slide.type}".`);return;}
   for(const [field,rule] of Object.entries(contract.fields))validateField(slide[field],rule,`Slide ${n} ${field}`,errors,warnings);
+
+  let archetype=null;
+  if(slide.intent!==undefined&&!INTENTS.has(slide.intent))errors.push(`Slide ${n}: unknown intent "${slide.intent}".`);
+  if(slide.archetype!==undefined){
+    archetype=ARCHETYPES.get(String(slide.archetype).padStart(2,"0"));
+    if(!archetype)errors.push(`Slide ${n}: unknown archetype "${slide.archetype}".`);
+    else{
+      if(slide.intent!==undefined&&slide.intent!==archetype.intent)errors.push(`Slide ${n}: intent "${slide.intent}" conflicts with archetype ${archetype.id} ("${archetype.intent}").`);
+      if(!archetype.rendererHints.includes(slide.type))warnings.push(`Slide ${n}: archetype ${archetype.id} ("${archetype.label}") usually maps to ${archetype.rendererHints.join(", ")}; current type is "${slide.type}".`);
+    }
+  }
+
   const key=String(slide.title||"").trim().toLowerCase();
-  if(key){if(titles.has(key))warnings.push(`Slide ${n}: title duplicates slide ${titles.get(key)}.`);else titles.set(key,n);if(GENERIC.has(key))warnings.push(`Slide ${n}: generic topic title; prefer a conclusion-oriented title.`);}
+  if(key){
+    if(titles.has(key))warnings.push(`Slide ${n}: title duplicates slide ${titles.get(key)}.`);else titles.set(key,n);
+    if(GENERIC.has(key))warnings.push(`Slide ${n}: generic topic title; prefer a conclusion-oriented title.`);
+    if(SELF_REF.test(slide.title))warnings.push(`Slide ${n}: title is self-referential; state the claim directly.`);
+    if(/^ja\b/i.test(String(deck.meta.language||""))&&slide.type!=="cover"&&slide.title.length>60)warnings.push(`Slide ${n}: Japanese title is ${slide.title.length} chars; story-first guidance prefers roughly 30–60 characters when practical.`);
+  }
+
   const bodyWords=words([slide.body,slide.proof,slide.subtitle].filter(Boolean).join(" "));
   if(bodyWords>90)warnings.push(`Slide ${n}: body copy is dense (${bodyWords} words; default max 90).`);
   if(/\b(TODO|TBD|LOREM)\b/i.test(JSON.stringify(slide)))warnings.push(`Slide ${n}: contains placeholder text.`);
