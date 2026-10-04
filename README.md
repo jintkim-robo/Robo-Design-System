@@ -2,6 +2,20 @@
 
 Robo Co-op's design-system source of truth, extended into a machine-readable, testable presentation system.
 
+## Story-first Presentation OS
+
+The Presentation OS now separates **reasoning**, **composition**, **rendering**, and **brand expression**.
+
+1. Frame the audience, decision, evidence boundary, and output.
+2. Write the governing claim and a headline ledger before drawing.
+3. Classify each slide into one of 7 communication intents.
+4. Select one of 48 composition archetypes.
+5. Map the archetype to the closest supported semantic layout.
+6. Apply the selected Robo brand grammar.
+7. Run structural QA, render, and visual QA.
+
+The 48 archetypes are a reasoning/composition registry, not 48 hard-coded PPT templates. This preserves flexibility and backward compatibility while making slide choice more deliberate.
+
 ## Brand Visual Systems v1
 
 The four Robo brands now have distinct presentation identities:
@@ -29,11 +43,17 @@ Legacy names remain aliases for compatibility, but new decks should use the bran
 ## Architecture
 
 ```
-brand contract
+audience / decision / evidence
     ↓
-storyline
+governing claim
     ↓
-semantic layout
+headline ledger / storyline
+    ↓
+7 communication intents
+    ↓
+48 composition archetypes
+    ↓
+7 semantic renderer layouts
     ↓
 brand-owned variant
     ↓
@@ -45,12 +65,29 @@ structural + visual QA
 ```
 
 Machine-readable sources:
+- `contracts/storytelling.json` — story-first workflow, headline/evidence rules, visual semantics, QA
+- `contracts/archetypes.json` — 7 intents + 48 composition archetypes and renderer hints
 - `contracts/brands.json`
 - `contracts/layouts.json`
 - `contracts/components.json`
 - `contracts/variants.json`
 
 `AGENTS.md` is generated from these contracts.
+
+### Optional slide metadata
+
+Existing deck JSON remains valid. New decks may add:
+
+```json
+{
+  "type": "comparison",
+  "intent": "change",
+  "archetype": "20",
+  "title": "The redesigned flow removes two handoffs without changing ownership"
+}
+```
+
+`intent` and `archetype` are validated when present. `type` remains the rendering contract.
 
 ## Visual regression
 
