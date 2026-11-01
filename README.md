@@ -8,6 +8,10 @@ For websites, landing pages, dashboards and other product interfaces, use the [R
 
 See [skill usage and QA](skills/README.md). The Presentation OS below remains authoritative for editable decks.
 
+## Interactive 3D — Robo 3D Teardown
+
+For **interactive 3D mechanical explainers, exploded views and training simulations**, use [Robo 3D Teardown](skills/robo-3d-teardown/SKILL.md). It adapts the reference-first workflow of [elvarofficial/teardown](https://github.com/elvarofficial/teardown) to Robo's existing light/dark brand tokens and QA. The upstream simulator runtime is an optional, separately reviewed third-party install; it is **not vendored or run** by this design-system package.
+
 ## Story-first Presentation OS
 
 The Presentation OS now separates **reasoning**, **composition**, **rendering**, and **brand expression**.
