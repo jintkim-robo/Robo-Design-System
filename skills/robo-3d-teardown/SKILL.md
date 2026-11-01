@@ -24,7 +24,7 @@ Build an inspectable, usable 3D mechanism demo while keeping **Robo Design Syste
 
 ## 3. Build a live, inspectable scene
 
-Use **Three.js** or a suitable existing renderer. When the third-party `teardown` skill is installed and authorized, reuse its scene/film workflow; otherwise do not claim that its runtime is included here.
+Use **Three.js** or a suitable existing renderer. For the integrated Robo example, use `demo/main.js` and the external runtime build pinned in `references/upstream.md`; `npm run 3d:build` runs its build pipeline after a separately reviewed upstream checkout is provided via `TEARDOWN_DIR`. Do not claim the third-party runtime is vendored.
 
 - Implement orbit/zoom, component selection, exploded/cutaway view, reset, play/pause, and explicit navigation between subsystems.
 - Keep the moving component visibly identifiable; connect changes to real operational state and readable callouts.
@@ -42,7 +42,7 @@ Use **Three.js** or a suitable existing renderer. When the third-party `teardown
 
 ## Deliverables
 
-Provide (a) the live interactive HTML/app or its verified build path, (b) a part/behavior manifest, (c) the chosen Robo brand/theme and exported color roles, (d) screenshots or a verified demo, and (e) the QA/accuracy caveats. Only offer a video when capture has actually succeeded.
+Provide (a) the live interactive HTML/app or its verified build path, (b) a part/behavior manifest, (c) the chosen Robo brand/theme and exported color roles, (d) screenshots or a verified demo, and (e) the QA/accuracy caveats. Only offer a video when capture has actually succeeded. For a live example, run `npm run 3d:test`, then `npm run 3d:build` and `npm run 3d:qa` with an authorized upstream checkout; see `demo/README.md`. The GitHub Actions workflow `robo-3d-teardown.yml` produces and tests the self-contained offline HTML.
 
 Example request:
 

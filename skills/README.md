@@ -22,4 +22,4 @@ Export a theme after `npm run tokens`:
 node skills/robo-3d-teardown/scripts/export-theme.mjs --brand robo-lab --theme light
 ```
 
-The upstream [elvarofficial/teardown](https://github.com/elvarofficial/teardown) generator is third-party MIT code and is **not bundled**. Review and install it separately if an executable Three.js teardown is needed. See [upstream and security notes](robo-3d-teardown/references/upstream.md).
+The upstream [elvarofficial/teardown](https://github.com/elvarofficial/teardown) generator is third-party MIT code and is **not vendored**. The Robo-developed [interactive demo](robo-3d-teardown/demo/README.md) is built by obtaining an audited and pinned upstream checkout. `npm run 3d:test` checks mechanism math and theme export; `npm run 3d:build` produces single-file HTML; `npm run 3d:qa` tests desktop/mobile Chrome and writes screenshots. See [upstream and security notes](robo-3d-teardown/references/upstream.md).

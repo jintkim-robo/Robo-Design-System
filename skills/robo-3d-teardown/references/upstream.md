@@ -22,7 +22,9 @@ The `npx` command above fetches and executes external code; do **not** run it au
 
 ## What was imported into Robo Design System
 
-Only the *workflow concepts* were adapted: reference-first geometry, single-driver model, inspectable parts, linked gauges, frame-by-frame visual QA, live/film consistency. No upstream source, example mesh, JavaScript package, audio, generated 3D file or trademark was vendored into the Robo repository.
+A Robo-developed interactive slider-crank example (`demo/`), reference-independent mechanical tests, a pinned-upstream build script and a Playwright browser QA workflow were added. The example **uses** upstream's `teardown-kit/runtime.js` and pinned bundler during build, but does not vendor them.
+
+Only the *workflow concepts* were adapted: reference-first geometry, single-driver model, inspectable parts, linked gauges, frame-by-frame visual QA, live/film consistency. No upstream source, example mesh, JavaScript package, audio, generated 3D file or trademark was vendored into the Robo repository. Generated offline HTML embeds third-party runtime code and includes its MIT notice.
 
 ## Accuracy, safety and licensing constraints
 

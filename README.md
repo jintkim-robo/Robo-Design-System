@@ -10,7 +10,7 @@ See [skill usage and QA](skills/README.md). The Presentation OS below remains au
 
 ## Interactive 3D — Robo 3D Teardown
 
-For **interactive 3D mechanical explainers, exploded views and training simulations**, use [Robo 3D Teardown](skills/robo-3d-teardown/SKILL.md). It adapts the reference-first workflow of [elvarofficial/teardown](https://github.com/elvarofficial/teardown) to Robo's existing light/dark brand tokens and QA. The upstream simulator runtime is an optional, separately reviewed third-party install; it is **not vendored or run** by this design-system package.
+For **interactive 3D mechanical explainers, exploded views and training simulations**, use [Robo 3D Teardown](skills/robo-3d-teardown/SKILL.md). It adapts the reference-first workflow of [elvarofficial/teardown](https://github.com/elvarofficial/teardown) to Robo's existing light/dark brand tokens and QA. A pinned upstream runtime is fetched only during optional CI/local builds and bundled into an **offline interactive 3D demo**; the third-party source itself is **not vendored**. Use `npm run 3d:build` and `npm run 3d:qa` with an authorized reviewed upstream checkout (see the [demo README](skills/robo-3d-teardown/demo/README.md)). GitHub Actions uploads the HTML and screenshots.
 
 ## Story-first Presentation OS
 
