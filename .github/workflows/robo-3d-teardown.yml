@@ -43,10 +43,10 @@ jobs:
           test "$(git -C "$RUNNER_TEMP/robo-upstream" rev-parse HEAD)" = "$UPSTREAM_SHA"
           echo "TEARDOWN_DIR=$RUNNER_TEMP/robo-upstream" >> "$GITHUB_ENV"
       - name: Install pinned upstream dependencies (no lifecycle scripts)
-        working-directory: ${runner.temp}/robo-upstream
+        working-directory: ${{ runner.temp }}/robo-upstream
         run: npm ci --ignore-scripts
       - name: Install Chromium for browser QA
-        working-directory: ${runner.temp}/robo-upstream
+        working-directory: ${{ runner.temp }}/robo-upstream
         run: npx playwright install --with-deps chromium
       - name: Run pure mechanism and theme tests
         run: npm run 3d:test
