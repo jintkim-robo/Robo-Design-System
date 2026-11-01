@@ -2,6 +2,12 @@
 
 Robo Co-op's design-system source of truth, extended into a machine-readable, testable presentation system.
 
+## Web and app UI — Robo Frontend Design
+
+For websites, landing pages, dashboards and other product interfaces, use the [Robo Frontend Design skill](skills/robo-frontend-design/SKILL.md). It adapts Anthropic's intentional-design and self-critique method to the four Robo brands **without changing canonical tokens, typography or logos**. The existing Robo Lab light-blue web theme remains available; dark slide variants are not web defaults.
+
+See [skill usage and QA](skills/README.md). The Presentation OS below remains authoritative for editable decks.
+
 ## Story-first Presentation OS
 
 The Presentation OS now separates **reasoning**, **composition**, **rendering**, and **brand expression**.
